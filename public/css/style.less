@@ -1,0 +1,105 @@
+@import "reset";
+
+@main: #667880; /* #eb7d62 #667880 #e04c40*/
+
+body {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+h1 {
+	font-size: 1.6em;
+}
+h2 {
+	font-size: 1.6em;
+}
+a {
+	text-decoration: none;
+	color: #333;
+}
+.wrap {
+	width: 960px;
+	margin: 0 auto;
+	position: relative;
+}
+.col {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0 1%;
+    vertical-align: top;
+    width: 32.9%;
+}
+
+
+body {
+	background-color: lighten(@main, 44%);
+}
+header.top {
+    padding: 10px;
+    h1 {
+        display: inline-block;
+        color: darken(@main, 10%);
+        text-transform: lowercase;
+    }
+    nav {
+        float: right;
+        display: inline-block;
+        width: 30%;
+        ul {
+	        text-align: right;
+	        li {
+		        display: inline-block;
+		        margin-left: 5px;
+		        a {
+			        display: block;
+			        padding: 5px;
+			        color: darken(@main, 10%);
+		        }
+	        }
+        }
+    }
+}
+
+#home {
+    
+    a.addPod {
+        display: block;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+    	text-align: center;
+    	color: darken(@main, 10%);
+	}
+	.podcastTile {
+    	width: 202px;
+        a {
+            display: block;
+            width: 200px;
+            height: 200px;
+            border: 1px solid @main;
+            margin: 10px 10px 10px 0;
+            background: url(images/default.png) center center;
+            position: relative;   
+	    }
+    	h3 {
+        	padding: 5px;
+        	color: @main;
+    	}
+	}
+}
+
+form {
+    background-color: @main;
+    box-sizing: border-box;
+    float: left;
+    padding: 15px;
+    
+    input {
+        box-sizing: border-box;
+        font-size: 90%;
+        margin: 5px 0;
+        padding: 3px;
+        width: 100%;
+    }
+    textarea {
+        width: 100%;
+    }
+}
