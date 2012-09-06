@@ -23,18 +23,23 @@ end
 # return all podcasts
 get '/podcasts' do 
     content_type :json
-    db.collection('podcasts').find.to_a.map{|i| i.merge({'id' => i['_id'].to_s})}.to_json
+    podcasts.find.to_a.map{|i| i.merge({'id' => i['_id'].to_s})}.to_json
 end
 
 # add a new podcast
 post '/podcasts' do
     podcast = JSON.parse(request.body.read.to_s)
-    oid = db.collection('podcasts').update({title: podcast['title']}, podcast, {upsert: true})
+    oid = podcasts.update({title: podcast['title']}, podcast, {upsert: true})
     "{\"id\": \"#{oid.to_s}\"}"
 end
 
 # update podcast
 put '/podcasts/:id' do
     # puts JSON.parse(request.body.read.to_s).reject{|k,v| k == '_id' || k == 'id'}
-    db.collection('podcasts').update( {:_id => BSON::ObjectId(params[:id])}, {'$set' => JSON.parse(request.body.read.to_s).reject{|k,v| k == '_id' || k == 'id'}})
+    podcasts.update( {:_id => BSON::ObjectId(params[:id])}, {'$set' => JSON.parse(request.body.read.to_s).reject{|k,v| k == '_id' || k == 'id'}})
+end
+
+# get an individual podcast
+get '/podcast/:slug' do
+    podcasts.find_one
 end

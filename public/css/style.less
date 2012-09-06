@@ -13,7 +13,7 @@ h2 {
 }
 a {
 	text-decoration: none;
-	color: #333;
+	color: darken(@main, 10%);
 }
 .wrap {
 	width: 960px;
@@ -60,23 +60,24 @@ header.top {
 
 #home {
     
-    a.addPod {
-        display: block;
+    footer {
         position: fixed;
         bottom: 0;
-        right: 0;
-    	text-align: center;
-    	color: darken(@main, 10%);
+    	text-align: right;
+    	padding-top: 20px;
+    	padding-bottom: 20px;
 	}
 	.podcastTile {
     	width: 202px;
+    	display: inline-block;
+    	margin: 17px;
         a {
             display: block;
             width: 200px;
             height: 200px;
             border: 1px solid @main;
-            margin: 10px 10px 10px 0;
-            background: url(images/default.png) center center;
+            margin-bottom: 10px;
+            background: url(images/default.png) center center no-repeat;
             position: relative;   
 	    }
     	h3 {
@@ -84,6 +85,19 @@ header.top {
         	color: @main;
     	}
 	}
+}
+
+#showPodcast {
+    width: 220px;
+    padding: 10px;
+    .thumb {
+        display: block;
+        width: 200px;
+        height: 200px;
+        border: 1px solid @main;
+        margin-bottom: 10px;
+        background: url(images/default.png) center center no-repeat;
+    }
 }
 
 form {

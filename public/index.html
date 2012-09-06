@@ -29,14 +29,32 @@
 	
 	<script type="text/template" id="homeTemplate">
     	<div class="wrap">
-            <div class="podcasts"></div>        	
-	    	<a class="addPod" style="cursor:pointer;float:right;">+ Add Podcast</a>
+            <div class="podcasts"></div>
+            <footer>
+                <a href="#" class="addPod">+ Add Podcast</a>
+            </footer>       	
     	</div>
 	</script>
 	
 	<script type="text/template" id="podcastTileTemplate">
-    	<a href="#" class="thumb"></a>
+    	<a href="#" data-id="<%= id %>" class="thumb"></a>
         <h3><%= title %></h3>
+	</script>
+	
+	
+	<script type="text/template" id="showPodcastTemplate">
+    	<div class="wrap">
+            <div class="podcastInfo">
+                <span class="thumb"></span>
+                <h3><%= title %></h3> 
+                <ul>
+                    <li>Author: <%= author %></li>
+                    <li>Owner Name: <%= owner_name %></li>
+                    <li>Owner Email: <%= owner_email %></li>
+                    <li>Description: <br/> <%= description %></li>
+                </ul>
+            </div>
+    	</div>
 	</script>
 	
 	

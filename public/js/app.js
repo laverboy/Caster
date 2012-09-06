@@ -1,5 +1,6 @@
 /*global Backbone, _ */
 /*jshint devel:true */
+/*jshint bitwise:false */
 
 /* -------------------------------------- */
 /*           View Helper                  */
@@ -41,8 +42,11 @@ var App = {
     Model: {},
     init: function() {
         
+        
+        
         var appRoutes;
         appRoutes = new App.Routes();
+        
         Backbone.history.start();
         
     }
@@ -54,15 +58,21 @@ var App = {
 
 App.Routes = Backbone.Router.extend({
     routes: {
-        ""          : "home",
-        "users"     : "showUsers",
-        "login"     : "showLogin"
+        ""                  : "home",
+        ":podcast"          : "showPodcast",
+        "users"             : "showUsers",
+        "login"             : "showLogin"
     },
     home: function () {
         var podcasts = new App.Collection.Podcasts();
-        window.podcasts = podcasts;
         podcasts.fetch();
         RegionManager.show(new App.View.Home({collection: podcasts}));
+    },
+    showPodcast: function (podcast) {
+        var podcasts = new App.Collection.Podcasts();
+        podcasts.fetch();
+        var model = podcasts.where({slug: podcast});
+        RegionManager.show(new App.View.ShowPodcast({model: model[0]}));
     },
     showUsers: function () {
         var items = new App.Collection.Items();
@@ -74,6 +84,37 @@ App.Routes = Backbone.Router.extend({
         items.fetch({data: {name: 'flow', url: 'http://podcast.message.org.uk/feed/flowpodcast'}});
         RegionManager.show(new App.View.Items({collection: items, title: "Flow", type: "podcast"}));
     }
+});
+
+/* -------------------------------------- */
+/*           Models 'n' Stuff             */
+/* -------------------------------------- */
+
+App.Model.Podcast = Backbone.Model.extend({
+    url: 'http://webdev:9393/podcasts',
+    defaults: {
+        'title'         : '',
+        'subtitle'      : '',
+        'author'        : '',
+        'owner_name'    : '',
+        'owner_email'   : '',
+        'copyright'     : '',
+        'description'   : ''
+    },
+    validate: function (attrs) {
+        if (attrs.title === '' || !attrs.title) {
+            return "It definitley needs a title!";
+        }
+    },
+    intialize: function () {
+        var slug = this.get('title');
+        slug = slug.trim().toLowerCase().replace(/\s/g,'-');
+        this.set({'slug' : slug});
+    }
+});
+App.Collection.Podcasts = Backbone.Collection.extend({
+    model: App.Model.Podcast,
+    url: 'http://webdev:9393/podcasts'
 });
 
 /* -------------------------------------- */
@@ -89,18 +130,27 @@ App.View.Home = Backbone.View.extend({
         'click .addPod'     : 'showAddForm'
     },
     initialize: function () {
-
+        this.collection.bind('add', this.addOne, this);
+        this.collection.bind('reset', this.addAll, this);
     },
     render: function () {
         this.$el.html(this.template());
         return this;
+    },
+    addOne: function (podcast) {
+        var view = new App.View.PodcastTile({model:podcast});
+        this.$('.podcasts').append(view.render().el);
+    },
+    addAll: function () {
+        this.collection.each(this.addOne);
     },
     showForm: function () {
         var model = this.collection.where({selected: true});
         var form = new App.View.PodcastForm({model: model[0]});
         this.$('.wrap').append(form.render().el);
     },
-    showAddForm: function () {
+    showAddForm: function (e) {
+        e.preventDefault();
         var model = new App.Model.Podcast();
         var form = new App.View.PodcastForm({model: model});
         this.$('.wrap').append(form.render().el);
@@ -121,34 +171,28 @@ App.View.PodcastTile = Backbone.View.extend({
         this.$el.html(this.template(this.model.toJSON()));
         return this;
     },
-    navigate: function () {
-        
+    navigate: function (e) {
+        e.preventDefault();
+        var url = this.model.get('slug');
+        Backbone.history.navigate(url, {trigger: true});
     }
 });
 
-App.Model.Podcast = Backbone.Model.extend({
-    url: 'http://webdev:9393/podcasts',
-    defaults: {
-        'title'         : '',
-        'subtitle'      : '',
-        'author'        : '',
-        'owner_name'    : '',
-        'owner_email'   : '',
-        'copyright'     : '',
-        'description'   : ''
+/* -------------------------------------- */
+/*           Show Podcast                 */
+/* -------------------------------------- */
+
+App.View.ShowPodcast = Backbone.View.extend({
+    tagName: 'section',
+    id: 'showPodcast',
+    template: _.template($('#showPodcastTemplate').html()),
+    render: function () {
+        this.$el.html(this.template(this.model.toJSON()));
+        return this;
     }
 });
-App.Collection.Podcasts = Backbone.Collection.extend({
-    model: App.Model.Podcast,
-    url: 'http://webdev:9393/podcasts',
-    toggleSelected: function (model) {
-        var selectedModels = this.where({selected: true});
-        _.each(selectedModels, function(item) {
-            item.set('selected',false);
-        });
-        if (model) { model.set('selected',true); }
-    }
-});
+
+
 
 App.View.PodcastForm = Backbone.View.extend({
     template: _.template($('#podcastFormTemplate').html()),
@@ -170,8 +214,15 @@ App.View.PodcastForm = Backbone.View.extend({
         }
         console.log(json);
         
-        this.model.save(json);
-        this.close();
+        this.model.save(
+            json,
+            {error: function (model, response) {
+                console.log(model, response);
+            }},
+            {success: function () {
+                this.close();
+            }}
+        );
     },
     closeView: function () {
         if (!this.model.get('selected')){ this.close();}
