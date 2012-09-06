@@ -59,7 +59,7 @@ var App = {
 App.Routes = Backbone.Router.extend({
     routes: {
         ""                  : "home",
-        ":podcast"          : "showPodcast",
+        ":slug"          : "showPodcast",
         "users"             : "showUsers",
         "login"             : "showLogin"
     },
@@ -68,11 +68,10 @@ App.Routes = Backbone.Router.extend({
         podcasts.fetch();
         RegionManager.show(new App.View.Home({collection: podcasts}));
     },
-    showPodcast: function (podcast) {
-        var podcasts = new App.Collection.Podcasts();
-        podcasts.fetch();
-        var model = podcasts.where({slug: podcast});
-        RegionManager.show(new App.View.ShowPodcast({model: model[0]}));
+    showPodcast: function (slug) {
+        var podcast = new App.Model.Podcast();
+        podcast.fetch({data: { slug: slug}});
+        RegionManager.show(new App.View.ShowPodcast({model: podcast}));
     },
     showUsers: function () {
         var items = new App.Collection.Items();
@@ -91,7 +90,7 @@ App.Routes = Backbone.Router.extend({
 /* -------------------------------------- */
 
 App.Model.Podcast = Backbone.Model.extend({
-    url: 'http://webdev:9393/podcasts',
+    idAttribute: "slug",
     defaults: {
         'title'         : '',
         'subtitle'      : '',
@@ -105,11 +104,6 @@ App.Model.Podcast = Backbone.Model.extend({
         if (attrs.title === '' || !attrs.title) {
             return "It definitley needs a title!";
         }
-    },
-    intialize: function () {
-        var slug = this.get('title');
-        slug = slug.trim().toLowerCase().replace(/\s/g,'-');
-        this.set({'slug' : slug});
     }
 });
 App.Collection.Podcasts = Backbone.Collection.extend({
