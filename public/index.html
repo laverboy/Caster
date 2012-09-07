@@ -48,10 +48,10 @@
                 <span class="thumb"></span>
                 <h3><%= title %></h3> 
                 <ul>
-                    <li>Author: <%= author %></li>
-                    <li>Owner Name: <%= owner_name %></li>
-                    <li>Owner Email: <%= owner_email %></li>
-                    <li>Description: <br/> <%= description %></li>
+                    <li><span>Author</span>: <br/><%= author %></li>
+                    <li><span>Owner</span>: <br/><%= owner %></li>
+                    <li><span>Owner Email</span>: <br/><%= owner_email %></li>
+                    <li><span>Description</span>: <br/><%= description %></li>
                 </ul>
             </div>
     	</div>
@@ -166,7 +166,13 @@
 	<script src="js/backbone-min.js"></script>
 	<script src="js/app.js"></script>
 	<script type="text/javascript">
-    	( function ($) { $(document).ready( function () { App.init(); }); } )(jQuery)
+    	( function ($) { 
+    		$(document).ready( function () { 
+    			App.init(); 
+    			window.Podcasts = new App.Collection.Podcasts();
+    			Podcasts.fetch();
+    		});
+    	} )(jQuery)
 	</script>
 </body>
 

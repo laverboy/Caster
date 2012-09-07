@@ -1,4 +1,4 @@
-/*global Backbone, _ */
+/*global Backbone, _, Podcasts */
 /*jshint devel:true */
 /*jshint bitwise:false */
 
@@ -64,14 +64,14 @@ App.Routes = Backbone.Router.extend({
         "login"             : "showLogin"
     },
     home: function () {
-        var podcasts = new App.Collection.Podcasts();
-        podcasts.fetch();
-        RegionManager.show(new App.View.Home({collection: podcasts}));
+        /*
+this.podcasts = new App.Collection.Podcasts();
+        this.podcasts.fetch();
+*/
+        RegionManager.show(new App.View.Home({collection: Podcasts}));
     },
     showPodcast: function (slug) {
-        var podcast = new App.Model.Podcast();
-        podcast.fetch({data: { slug: slug}});
-        RegionManager.show(new App.View.ShowPodcast({model: podcast}));
+        RegionManager.show(new App.View.ShowPodcast({model: Podcasts.get(slug)}));
     },
     showUsers: function () {
         var items = new App.Collection.Items();
@@ -108,7 +108,7 @@ App.Model.Podcast = Backbone.Model.extend({
 });
 App.Collection.Podcasts = Backbone.Collection.extend({
     model: App.Model.Podcast,
-    url: 'http://webdev:9393/podcasts'
+    url: '/podcasts'
 });
 
 /* -------------------------------------- */
