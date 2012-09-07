@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Caster</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	
+	<header class="top clearfix">
+	   <div class="wrap">
+		   <h1>Caster</h1>
+			<nav>
+				<ul>
+					<li><a href="#podcasts">Podcasts</a></li>
+					<li><a href="#users">Users</a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
+
+	<div id="container"></div>
+	
+	<%= File.read(File.join('views', 'tmpls.html')) %>
+		
+	<!-- =================================== -->
+    <!--    Load Scripts                     -->
+	<!-- =================================== -->
+	
+	<script src="js/jquery-1.8.0.min.js"></script>
+	<script src="js/underscore-min.js"></script>
+	<script src="js/backbone-min.js"></script>
+	<script src="js/app.js"></script>
+	<script type="text/javascript">
+    	( function ($) { 
+    		$(document).ready( function () { 
+    			
+    			var json = <%= @podcasts %>;
+        		
+        		
+        		App.init(json);
+    		});
+    	} )(jQuery)
+	</script>
+</body>
+
+</html>

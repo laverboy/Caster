@@ -37,8 +37,10 @@ msg = Podcasts.first_or_create(message_podcast)
 # pod_id = podcasts.update({title: message_podcast[:title]}, message_podcast, {upsert: true})
 # 
 get '/' do 
-	File.read(File.join('public', 'index.html'))
-    # @podcasts = Podcasts.all
+	# File.read(File.join('public', 'index.html'))
+    @podcasts = Podcasts.all.to_json
+    
+    erb :index
 end
 
 # return all podcasts

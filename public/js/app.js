@@ -1,4 +1,4 @@
-/*global Backbone, _, Podcasts */
+/*global Backbone, _ */
 /*jshint devel:true */
 /*jshint bitwise:false */
 
@@ -40,11 +40,12 @@ var App = {
     View: {},
     Collection: {},
     Model: {},
-    init: function() {
-        
-        
-        
-        var appRoutes;
+    init: function(json) {
+		
+		this.podcasts = new App.Collection.Podcasts();
+		this.podcasts.reset(json);
+		
+		var appRoutes;
         appRoutes = new App.Routes();
         
         Backbone.history.start();
@@ -59,19 +60,16 @@ var App = {
 App.Routes = Backbone.Router.extend({
     routes: {
         ""                  : "home",
-        ":slug"          : "showPodcast",
+        ":slug"             : "showPodcast",
         "users"             : "showUsers",
         "login"             : "showLogin"
     },
     home: function () {
-        /*
-this.podcasts = new App.Collection.Podcasts();
-        this.podcasts.fetch();
-*/
-        RegionManager.show(new App.View.Home({collection: Podcasts}));
+        RegionManager.show(new App.View.Home({collection: App.podcasts}));
+        App.podcasts.trigger('reset');
     },
     showPodcast: function (slug) {
-        RegionManager.show(new App.View.ShowPodcast({model: Podcasts.get(slug)}));
+        RegionManager.show(new App.View.ShowPodcast({model: App.podcasts.get(slug)}));
     },
     showUsers: function () {
         var items = new App.Collection.Items();
@@ -124,8 +122,10 @@ App.View.Home = Backbone.View.extend({
         'click .addPod'     : 'showAddForm'
     },
     initialize: function () {
+        _.bindAll(this, 'addOne', 'addAll');
         this.collection.bind('add', this.addOne, this);
         this.collection.bind('reset', this.addAll, this);
+        
     },
     render: function () {
         this.$el.html(this.template());

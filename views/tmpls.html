@@ -1,29 +1,4 @@
-<!DOCTYPE HTML>
-<html>
-
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Caster</title>
-	<link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-	
-	<header class="top clearfix">
-	   <div class="wrap">
-		   <h1>Caster</h1>
-			<nav>
-				<ul>
-					<li><a href="#podcasts">Podcasts</a></li>
-					<li><a href="#users">Users</a></li>
-				</ul>
-			</nav>
-		</div>
-	</header>
-
-	<div id="container"></div>
-	
-	<!-- =================================== -->
+<!-- =================================== -->
     <!--    Templates                        -->
 	<!-- =================================== -->
 	
@@ -156,24 +131,3 @@
         	<input type="submit" name="save" id="save" value="Save">
         </form>
 	</script>
-	
-	<!-- =================================== -->
-    <!--    Load Scripts                     -->
-	<!-- =================================== -->
-	
-	<script src="js/jquery-1.8.0.min.js"></script>
-	<script src="js/underscore-min.js"></script>
-	<script src="js/backbone-min.js"></script>
-	<script src="js/app.js"></script>
-	<script type="text/javascript">
-    	( function ($) { 
-    		$(document).ready( function () { 
-    			App.init(); 
-    			window.Podcasts = new App.Collection.Podcasts();
-    			Podcasts.fetch();
-    		});
-    	} )(jQuery)
-	</script>
-</body>
-
-</html>
