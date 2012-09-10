@@ -28,28 +28,33 @@
                     <li><span>Owner Email</span>: <br/><%= owner_email %></li>
                     <li><span>Description</span>: <br/><%= description %></li>
                 </ul>
+                <a href="#" class="editPod">+ Edit Podcast</a>
             </div>
     	</div>
 	</script>
 	
 	
 	<script type="text/template" id="podcastFormTemplate">
-    	<form id="podcastForm">
-            <div class="col"> 
-                <input placeholder="Title" type="text" name="title" value="<%= title %>">
-                
-                <input placeholder="Subtitle" type="text" name="subtitle" value="<%= subtitle %>">
-                
-                <input placeholder="Author" type="text" name="author" value="<%= author %>">	
-                
-                <input placeholder="Owner Name" type="text" name="owner_name" value="<%= owner_name %>">
-                
-                <input placeholder="Owner Email" type="text" name="owner_email" value="<%= owner_email %>">
-                
-                <input placeholder="Copyright Notice" type="text" name="copyright" value="<%= copyright %>">
-                
+    	<form id="podcastForm" class="wrap clearfix">
+            
+            <div>
+                <label for="title">Title</label>
+                <input type="text" name="title" value="<%= title %>">
+
+                <label for="author">Author</label>
+                <input type="text" name="author" value="<%= author %>">	
+
+                <label for="owner">Owner</label>
+                <input type="text" name="owner" value="<%= owner %>">
+
+                <label for="owner_email">Owner Email</label>
+                <input type="text" name="owner_email" value="<%= owner_email %>">
+
+                <label for="copyright">Copyright</label>
+                <input type="text" name="copyright" value="<%= copyright %>">
+                   
                 <label for="category_id">Category</label>
-                <select name="category_id" id="category_id" style="width: 200px">
+                <select name="category_id" id="category_id">
                         <option value="1" label="Arts">Arts</option>
                         <option value="2" label="Arts - Design">Arts - Design</option>
                         <option value="3" label="Arts - Fashion &amp; Beauty">Arts - Fashion &amp; Beauty</option>
@@ -120,14 +125,20 @@
                     </select>
             </div>
             
-            <div class="col">
-                <input placeholder="Cover Image" type="file" name="image">
-            </div>
-            
-        	<div class="col">
+            <div>
             	<label for="description">Description</label>
             	<textarea name="description" rows="5" cols="25"><%= description %></textarea>
         	</div>
+            
+            <div class="well">
+                <span class="thumb">
+                    <img id="picture">
+                </span>
+                <p>Drag your photo here to replace</p>
+            </div>
+            <hr />
         	<input type="submit" name="save" id="save" value="Save">
+        	
+        	<span class="close"></span>
         </form>
 	</script>

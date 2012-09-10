@@ -10,32 +10,33 @@ class Podcasts
     property :title,        String, required: true
     property :author,       String
     property :owner,        String
-    property :owner,        String
     property :owner_email,  String
-    property :category,     String
+    property :copyright,    String
+    property :category_id,  String
     property :description,  Text
+    property :image,        String
     property :created_at ,  DateTime  
     property :updated_at ,  DateTime
 end
 
 DataMapper.auto_upgrade!
 
-message_podcast = {
-    :title => "The Message Podcast",
-    :author => "The Message Trust",
-    :owner => "The Message Trust",
-    :owner_email => "info@message.org.uk",
-    :category => "Religion & Spirtuality - Christianity",
-    :description => "You just found the podcast from Manchester based youth organisation The Message. Click subscribe to get access to loads of free content including exclusive talks, music and videos. Hold tight!"
-}
+check = Podcasts.all
 
-msg = Podcasts.first_or_create(message_podcast)
+if check.empty?
+    message_podcast = {
+        :title => "The Message Podcast",
+        :author => "The Message Trust",
+        :owner => "The Message Trust",
+        :owner_email => "info@message.org.uk",
+        :category_id => "Religion & Spirtuality - Christianity",
+        :description => "You just found the podcast from Manchester based youth organisation The Message. Click subscribe to get access to loads of free content including exclusive talks, music and videos. Hold tight!"
+    }
+    
+    msg = Podcasts.first_or_create(message_podcast)
+end
 
-# db = Mongo::Connection.new.db('caster')
-# podcasts = db.collection('podcasts')
-# 
-# pod_id = podcasts.update({title: message_podcast[:title]}, message_podcast, {upsert: true})
-# 
+
 get '/' do 
 	# File.read(File.join('public', 'index.html'))
     @podcasts = Podcasts.all.to_json
@@ -53,16 +54,31 @@ end
 get '/podcasts/:slug' do
     Podcasts.get(params[:slug])
 end
-# 
-# # add a new podcast
-# post '/podcasts' do
-#     podcast = JSON.parse(request.body.read.to_s)
-#     oid = podcasts.update({title: podcast['title']}, podcast, {upsert: true})
-#     "{\"id\": \"#{oid.to_s}\"}"
-# end
-# 
-# # update podcast
-# put '/podcasts/:id' do
-#     # puts JSON.parse(request.body.read.to_s).reject{|k,v| k == '_id' || k == 'id'}
-#     podcasts.update( {:_id => BSON::ObjectId(params[:id])}, {'$set' => JSON.parse(request.body.read.to_s).reject{|k,v| k == '_id' || k == 'id'}})
-# end
+
+# add a new podcast
+post '/podcasts' do
+    podcast = JSON.parse(request.body.read.to_s)
+    newPod = Podcasts.first_or_create(podcast)
+    newPod.to_json
+end
+
+# update podcast
+put '/podcasts' do
+    podcast = JSON.parse(request.body.read.to_s)
+    # puts JSON.parse(request.body.read.to_s).reject{|k,v| k == '_id' || k == 'id'}
+    update = Podcasts.get(podcast['slug'])
+    update.update(podcast)
+end
+
+#upload image
+post "/upload" do
+    thumb = params['thumb']
+    puts thumb
+    File.open('public/uploads/' + thumb[:filename], "w") do |f|
+        f.write(thumb[:tempfile].read)
+    end
+    return "The file was successfully uploaded."
+    
+    #TODO
+    # need to add some serious verification stuff
+end

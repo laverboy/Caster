@@ -88,12 +88,12 @@ App.Routes = Backbone.Router.extend({
 /* -------------------------------------- */
 
 App.Model.Podcast = Backbone.Model.extend({
+    url: '/podcasts',
     idAttribute: "slug",
     defaults: {
         'title'         : '',
-        'subtitle'      : '',
         'author'        : '',
-        'owner_name'    : '',
+        'owner'         : '',
         'owner_email'   : '',
         'copyright'     : '',
         'description'   : ''
@@ -133,7 +133,7 @@ App.View.Home = Backbone.View.extend({
     },
     addOne: function (podcast) {
         var view = new App.View.PodcastTile({model:podcast});
-        this.$('.podcasts').append(view.render().el);
+        this.$('.podcasts').prepend(view.render().el);
     },
     addAll: function () {
         this.collection.each(this.addOne);
@@ -147,7 +147,7 @@ App.View.Home = Backbone.View.extend({
         e.preventDefault();
         var model = new App.Model.Podcast();
         var form = new App.View.PodcastForm({model: model});
-        this.$('.wrap').append(form.render().el);
+        this.$el.prepend(form.render().el);
     },
     close: function(){
         this.remove();
@@ -180,21 +180,36 @@ App.View.ShowPodcast = Backbone.View.extend({
     tagName: 'section',
     id: 'showPodcast',
     template: _.template($('#showPodcastTemplate').html()),
+    events: {
+        'click .editPod' : 'showEditForm'
+    },
     render: function () {
         this.$el.html(this.template(this.model.toJSON()));
         return this;
+    },
+    showEditForm: function (e) {
+        e.preventDefault();
+        var form = new App.View.PodcastForm({model: this.model});
+        this.$el.prepend(form.render().el);
+    },
+    close: function(){
+        this.remove();
+        this.unbind();
     }
 });
 
 
 
 App.View.PodcastForm = Backbone.View.extend({
+    className: 'topSlide',
     template: _.template($('#podcastFormTemplate').html()),
     events: {
-        'submit #podcastForm'   : 'submit'
+        'submit #podcastForm'   : 'submit',
+        'drop #picture'         : 'dropHandler',
+        'click .close'          : 'close'
     },
     initialize: function () {
-        this.model.bind('change:selected', this.closeView, this);
+        _.bindAll(this, 'submit', 'dropHandler');
     },
     render: function () {
         this.$el.html(this.template(this.model.toJSON()));
@@ -202,24 +217,84 @@ App.View.PodcastForm = Backbone.View.extend({
     },
     submit: function (e) {
         e.preventDefault();
+        var self = this;
         var formData = this.$('form').serializeArray(), json = {};
         for (var i in formData) {
             json[formData[i].name] = formData[i].value;
         }
-        console.log(json);
         
-        this.model.save(
-            json,
-            {error: function (model, response) {
-                console.log(model, response);
-            }},
-            {success: function () {
-                this.close();
-            }}
-        );
+        if (this.model.isNew()) {
+
+            App.podcasts.create(
+                json,
+                {
+                    success: function (model, response) {
+                        console.log("success: ", model, response);
+                        self.close();
+                    },
+                    error: function (model, response) {
+                        console.log("error: ", model, response);
+                    },
+                    wait:true
+                }
+            );
+            
+        } else {
+            this.model.save(
+                json,
+                {
+                    success: function (model, response) {
+                        console.log("success: ", model, response);
+                        self.close();
+                    },
+                    error: function (model, response) {
+                        console.log("error: ", model, response);
+                    },
+                    wait:true
+                }
+            );
+        }
     },
-    closeView: function () {
-        if (!this.model.get('selected')){ this.close();}
+    dropHandler: function (event) {
+        /* stop any default actions */
+        event.stopPropagation();
+        event.preventDefault();
+        
+        var self = this;
+        
+        var e = event.originalEvent;
+        e.dataTransfer.dropEffect = 'copy';
+        /* 500000 */
+        var pictureFile = e.dataTransfer.files[0];
+        if (pictureFile.size > 500000) {
+            /* throw some kind of too big error */
+            console.log('bigger than 500k');
+        }
+        
+        
+        var reader = new FileReader();
+        reader.onloadend = function () {
+            self.$('#picture').attr('src', reader.result);
+        };
+        reader.readAsDataURL(pictureFile);
+        
+        var data = new FormData();
+        data.append('thumb', pictureFile);
+        $.ajax({
+            url: '/upload',
+            type: 'POST',
+            data: data,
+            processData: false,
+            cache: false,
+            contentType: false
+        })
+        .done(function (resp) {
+            console.log("uploaded: ", resp);
+            self.model.set('image', pictureFile.filename);
+        })
+        .fail(function (resp) {
+            console.log("fail: ", resp);
+        });
     },
     close: function () {
         this.remove();
