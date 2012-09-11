@@ -22,8 +22,9 @@ header nav{float:right;width:30%;}header nav ul{text-align:right;}header nav ul 
 #home .podcastTile{width:202px;margin:17px;display:inline-block;vertical-align:top;}#home .podcastTile a{display:block;width:200px;height:200px;border:1px solid #667880;margin-bottom:10px;background:url(images/default.png) center center no-repeat;position:relative;}
 #home .podcastTile h3{padding:5px;color:#667880;}
 #showPodcast .wrap{padding-bottom:50px;}
-#showPodcast .podcastInfo{width:220px;padding:0 17px;float:left;}#showPodcast .podcastInfo .editPod{display:block;margin-top:20px;}
-#showPodcast .podcastEntries{width:680px;margin-left:260px;background-color:#fafafb;padding:10px;font-size:0.8125em;}#showPodcast .podcastEntries table th{font-weight:bold;text-align:left;padding-bottom:5px;}
+#showPodcast .podcastInfo{width:200px;padding:0 17px;float:left;}#showPodcast .podcastInfo li{margin:5px 0 10px;}#showPodcast .podcastInfo li span{display:block;border-bottom:1px solid #667880;font-weight:500;margin-bottom:3px;}
+#showPodcast .podcastInfo .editPod{display:block;margin-top:20px;}
+#showPodcast .podcastEntries{width:700px;margin-left:240px;background-color:#fafafb;padding:10px;font-size:0.8125em;}#showPodcast .podcastEntries table th{font-weight:bold;text-align:left;padding-bottom:5px;}
 #showPodcast .podcastEntries table tr{line-height:24px;height:24px;}#showPodcast .podcastEntries table tr.entry{border-bottom:1px solid #ddd;}
 #showPodcast .podcastEntries table td{text-overflow:ellipsis;white-space:nowrap;overflow:hidden;padding-right:5px;}#showPodcast .podcastEntries table td.name{max-width:180px;}
 #showPodcast .podcastEntries table td.desc{max-width:300px;}

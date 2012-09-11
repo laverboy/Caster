@@ -110,17 +110,27 @@ header {
         padding-bottom: 50px;
     }
     .podcastInfo {
-        width: 220px;
+        width: 200px;
         padding: 0 17px;
         float: left;
+        li {
+            margin: 5px 0 10px;
+            span {
+                display: block;
+                border-bottom: 1px solid @main;
+                font-weight: 500;
+                margin-bottom: 3px;
+            }
+        }
+
         .editPod {
             display: block;
             margin-top: 20px;
         }
     }
     .podcastEntries {
-        width: 680px;
-        margin-left: 260px;
+        width: 700px;
+        margin-left: 240px;
         background-color: lighten(@main, 53%);
         padding: 10px;
         font-size: 0.8125em; /* 13px  */

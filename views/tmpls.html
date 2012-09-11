@@ -13,7 +13,7 @@
 	
 	<script type="text/template" id="podcastTileTemplate">
     	<a href="#" class="thumb">
-	    	<% if(image) { %>
+	    	<% if(typeof(image) != 'undefined' && image) { %>
             <img src="uploads/<%= image %>">
             <% } %>
     	</a>
@@ -25,43 +25,43 @@
     	<div class="wrap clearfix">
             <div class="podcastInfo">
                 <span class="thumb">
-                	<% if(image) { %>
+                	<% if(typeof(image) != 'undefined' && image) { %>
 	                <img src="uploads/<%= image %>">
 	                <% } %>
                 </span>
                 <h2><%= title %></h2> 
                 <ul>
-                    <li><span>Author</span>: <br/><%= author %></li>
-                    <li><span>Owner</span>: <br/><%= owner %></li>
-                    <li><span>Owner Email</span>: <br/><%= owner_email %></li>
-                    <li><span>Description</span>: <br/><%= description %></li>
+                    <li><span>Author</span> <%= author %></li>
+                    <li><span>Owner</span> <%= owner %></li>
+                    <li><span>Owner Email</span> <%= owner_email %></li>
+                    <li><span>Description</span> <%= description %></li>
                 </ul>
                 <a href="#" class="editPod">+ Edit Podcast</a>
             </div>
             <div class="podcastEntries">
-                <table>
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Released</th>
-                        <th>Duration</th>
-                    </tr>
-                    <tr class="entry">
-                        <td class="name">Emma Kizlauskas - Avoiding the Fall</td>
-                        <td class="desc">Emma Kizlauskas speaking at our Tuesday Morning Prayer Meeting on the fall of Elijah and how we can avoid the same.</td>
-                        <td class="date">Wed, 22 Aug 2012 09:00:00 GMT</td>
-                        <td class="dur">27:45</td>
-                    </tr>
-                    <tr class="entry">
-                        <td class="name">Emma Kizlauskas - Avoiding the Fall</td>
-                        <td class="desc">Emma Kizlauskas speaking at our Tuesday Morning Prayer Meeting on the fall of Elijah and how we can avoid the same.</td>
-                        <td class="date">Wed, 22 Aug 2012 09:00:00 GMT</td>
-                        <td class="dur">27:45</td>
-                    </tr>
+                <table id="entries">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Released</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    
+                    </tbody>
 
                 </table>
             </div>
     	</div>
+	</script>
+	
+	<script type="text/template" id="entryTemplate">
+    	<td class="name"><%= name %></td>
+        <td class="desc"><%= description %></td>
+        <td class="date"><%= pubdate %></td>
+        <td class="dur"><%= duration %></td>
 	</script>
 	
 	
@@ -163,7 +163,7 @@
             
             <div class="well">
                 <span class="thumb">
-                    <% if(image) { %>
+                    <% if(typeof(image) != 'undefined' && image) { %>
 	                <img id="picture" src="uploads/<%= image %>">
 	                <% } %>
                 </span>

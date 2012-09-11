@@ -109,6 +109,12 @@ App.Collection.Podcasts = Backbone.Collection.extend({
     url: '/podcasts'
 });
 
+App.Model.Entry = Backbone.Model.extend({});
+App.Collection.Entries = Backbone.Collection.extend({
+    model: App.Model.Entry,
+    url: '/entries'
+});
+
 /* -------------------------------------- */
 /*           Home                         */
 /* -------------------------------------- */
@@ -184,7 +190,17 @@ App.View.ShowPodcast = Backbone.View.extend({
         'click .editPod' : 'showEditForm'
     },
     initialize: function () {
-	    /* need to add auto updating of view on save */
+        _.bindAll(this, 'loadEntries');
+        /* need to add auto updating of view on save */
+        
+        /* Get entries for this podcast */
+        var entries = new App.Collection.Entries();
+        entries.fetch(
+            {
+                data: {slug: this.model.get('slug')},
+                success: this.loadEntries
+            }
+        );
     },
     render: function () {
         this.$el.html(this.template(this.model.toJSON()));
@@ -195,9 +211,27 @@ App.View.ShowPodcast = Backbone.View.extend({
         var form = new App.View.PodcastForm({model: this.model});
         this.$el.prepend(form.render().el);
     },
+    loadEntries: function(collection, response) {
+        console.log(collection, response);
+        collection.each(this.addEntry);
+    },
+    addEntry: function (model) {
+        var entry = new App.View.Entry({model: model});
+        this.$('#entries tbody').append(entry.render().el);
+    },
     close: function(){
         this.remove();
         this.unbind();
+    }
+});
+
+App.View.Entry = Backbone.View.extend({
+    tagName: 'tr',
+    className: 'entry',
+    template: _.template($('#entryTemplate').html()),
+    render: function () {
+        this.$el.html(this.template(this.model.toJSON()));
+        return this;
     }
 });
 
