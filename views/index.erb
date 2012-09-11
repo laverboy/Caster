@@ -13,7 +13,7 @@
 	
 	<header class="clearfix">
 	   <div class="wrap">
-		   <h1>Caster</h1>
+		   <h1><a href="/">Caster</a></h1>
 			<nav>
 				<ul>
 					<li><a href="#podcasts">Podcasts</a></li>
@@ -38,10 +38,7 @@
 	<script type="text/javascript">
     	( function ($) { 
     		$(document).ready( function () { 
-    			
     			var json = <%= @podcasts %>;
-        		
-        		
         		App.init(json);
     		});
     	} )(jQuery)

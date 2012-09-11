@@ -183,6 +183,9 @@ App.View.ShowPodcast = Backbone.View.extend({
     events: {
         'click .editPod' : 'showEditForm'
     },
+    initialize: function () {
+	    /* need to add auto updating of view on save */
+    },
     render: function () {
         this.$el.html(this.template(this.model.toJSON()));
         return this;
@@ -264,20 +267,21 @@ App.View.PodcastForm = Backbone.View.extend({
         
         var e = event.originalEvent;
         e.dataTransfer.dropEffect = 'copy';
-        /* 500000 */
+
         var pictureFile = e.dataTransfer.files[0];
         if (pictureFile.size > 500000) {
             /* throw some kind of too big error */
             console.log('bigger than 500k');
         }
         
-        
+        /* Show the new picture immediately */
         var reader = new FileReader();
         reader.onloadend = function () {
             self.$('#picture').attr('src', reader.result);
         };
         reader.readAsDataURL(pictureFile);
         
+        /* upload the picture and set the name to the model */
         var data = new FormData();
         data.append('thumb', pictureFile);
         $.ajax({
@@ -290,7 +294,7 @@ App.View.PodcastForm = Backbone.View.extend({
         })
         .done(function (resp) {
             console.log("uploaded: ", resp);
-            self.model.set('image', pictureFile.filename);
+            self.model.set('image', pictureFile.name);
         })
         .fail(function (resp) {
             console.log("fail: ", resp);
