@@ -1,5 +1,4 @@
-require 'rubygems'
-require 'sinatra'
+# require 'sinatra'
 require 'json'
 require 'data_mapper'
 
@@ -95,8 +94,7 @@ post "/upload" do
     end
     return "The file was successfully uploaded."
     
-    #TODO
-    # need to add some serious verification stuff
+    # TODO need to add some serious verification stuff
 end
 
 get '/entries' do 

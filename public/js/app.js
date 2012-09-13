@@ -187,11 +187,12 @@ App.View.ShowPodcast = Backbone.View.extend({
     id: 'showPodcast',
     template: _.template($('#showPodcastTemplate').html()),
     events: {
-        'click .editPod' : 'showEditForm'
+        'click .editPod' : 'showEditForm',
+        'drop #podDrop'  : 'dropHandler'
     },
     initialize: function () {
         _.bindAll(this, 'loadEntries');
-        /* need to add auto updating of view on save */
+        /* TODO need to add auto updating of view on save */
         
         /* Get entries for this podcast */
         var entries = new App.Collection.Entries();
@@ -213,11 +214,71 @@ App.View.ShowPodcast = Backbone.View.extend({
     },
     loadEntries: function(collection, response) {
         console.log(collection, response);
+        
+        /* TODO if collection empty */
         collection.each(this.addEntry);
     },
     addEntry: function (model) {
         var entry = new App.View.Entry({model: model});
         this.$('#entries tbody').append(entry.render().el);
+    },
+    dropHandler: function (event) {
+        /* stop any default actions */
+        event.stopPropagation();
+        event.preventDefault();
+        
+        /* var self = this; */
+        
+        var allowedFiles = ["audio/x-m4a", "audio/mp3"];
+        
+        var e = event.originalEvent;
+        e.dataTransfer.dropEffect = 'copy';
+
+        var audioFile = e.dataTransfer.files[0];
+        
+        console.log(audioFile);
+        
+        if (allowedFiles.indexOf(audioFile.type) === -1){
+            console.log('not an audio file we like');
+        }
+        
+        if (audioFile.size > 50000000) {
+            /* throw some kind of too big error */
+            console.log('bigger than 50mb');
+        }
+        
+        self.$('#podDrop h3').text(audioFile.name.slice(0,-4));
+        
+        /* Show the audio file title immediately */
+        /*
+var reader = new FileReader();
+        reader.onloadend = function () {
+            self.$('#podDrop h3').text(reader.result);
+            console.log(reader);
+        };
+        reader.readAsDataURL(audioFile);
+*/
+        
+        /* upload the file and set the name to the model */
+        /*
+var data = new FormData();
+        data.append('thumb', audioFile);
+        $.ajax({
+            url: '/upload',
+            type: 'POST',
+            data: data,
+            processData: false,
+            cache: false,
+            contentType: false
+        })
+        .done(function (resp) {
+            console.log("uploaded: ", resp);
+            self.model.set('image', audioFile.name);
+        })
+        .fail(function (resp) {
+            console.log("fail: ", resp);
+        });
+*/
     },
     close: function(){
         this.remove();

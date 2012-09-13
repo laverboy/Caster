@@ -109,6 +109,12 @@ header {
     .wrap {
         padding-bottom: 50px;
     }
+    #podDrop {
+        background-color: @main;
+        height: 20px;
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
     .podcastInfo {
         width: 200px;
         padding: 0 17px;
@@ -140,6 +146,22 @@ header {
                 font-weight: bold;
                 text-align: left;
                 padding-bottom: 5px;
+                padding-right: 5px;
+                &.name{
+                    width: 180px;
+                    max-width: 180px;
+                }
+                &.desc {
+                    width: 300px;
+                    max-width: 300px
+                }
+                &.date {
+                    width: 130px;
+                    max-width: 130px;
+                }
+                &.dur {
+                    
+                }
             }
             tr {
                 line-height: 24px;
